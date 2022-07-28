@@ -1,0 +1,27 @@
+---
+- name: import secret variable file
+  include_vars: "vault.yml"
+
+- name: test rsa copy
+  copy:
+    content: "{{ id_rsa }}"
+    dest: "/home/clove/.ssh/id_rsa"
+    mode: 0600
+
+- name: test rsa.pub copy
+  copy:
+    content: "{{ id_rsa_pub }}"
+    dest: "/home/clove/.ssh/id_rsa.pub"
+    mode: 0600
+
+- name: test known_hosts copy
+  copy:
+    content: "{{ known_hosts }}"
+    dest: "/home/clove/.ssh/known_hosts"
+    mode: 0600
+
+- name: test authorized_keys copy
+  authorized_key:
+    user: clove
+    state: present
+    key: "{{ clove_pub }} \n {{ id_rsa_pub }}"

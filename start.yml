@@ -1,0 +1,8 @@
+---
+- name: start here
+  hosts: prod
+  roles:
+     - keychain
+     - docker
+     - docker-compose
+     - hugo

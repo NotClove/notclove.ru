@@ -1,0 +1,28 @@
+---
+- name: hugo install
+  apt:
+    deb: https://github.com/gohugoio/hugo/releases/download/v0.101.0/hugo_0.101.0_Linux-64bit.deb
+  become: true
+
+- name: hugo init
+  shell: |
+    cd /home/clove
+    sudo hugo new site notclove.ru
+    cd /home/clove/notclove.ru 
+    sudo rm -rf themes/* themes/.*
+    sudo rm -rf content/* content/.*
+    sudo git clone https://github.com/athul/archie.git themes/archie
+    sudo git clone https://github.com/NotClove/nc-content.git content
+  become: true
+
+- name: hugo config.toml
+  template:
+    src: "config.toml"
+    dest: "/home/clove/notclove.ru/config.toml"
+  become: true
+
+- name: hugo first start
+  shell: |
+    cd /home/clove/notclove.ru
+    sudo hugo -D
+  become: true

@@ -1,0 +1,7 @@
+all:
+  hosts:
+    prod:
+      ansible_connection: ssh
+      ansible_user: clove
+      ansible_host: 93.120.224.202
+      ansible_port: 20221

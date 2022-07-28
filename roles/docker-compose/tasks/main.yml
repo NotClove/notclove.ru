@@ -1,0 +1,13 @@
+---
+- name: copy Docker Compose files
+  copy:
+    src: dc/{{ item }}
+    dest: /home/clove/{{ item }}
+  loop:
+  - docker-compose.yml
+
+- name: deploy Docker Compose stack
+  community.docker.docker_compose:
+    project_src: /home/clove
+    files:
+    - docker-compose.yml

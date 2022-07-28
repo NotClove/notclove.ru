@@ -1,0 +1,51 @@
+---
+- name: Docker install
+  block:
+    - name: Universe add
+      apt_repository:
+        repo: "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} universe"
+        state: present
+    - name: adding packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        update-cache: true
+        cache_valid_time: 86400
+    - name: adding docker key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: adding stable repo
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu   focal stable
+        state: present
+        update-cache: true
+        filename: docker
+    - name: Docker-CE installing
+      apt:
+        name: docker-ce
+        update-cache: true
+    - name: Docker-CE install check
+      service:
+        name: docker
+        state: restarted
+        enabled: true
+    - name: Docker compose install
+      apt:
+        name: docker-compose
+        update-cache: true
+  become: true
+- name: Last steps
+  block:
+    - name: adding user group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+  become: true
+- name: reset ssh connection
+  meta: reset_connection
